@@ -3,6 +3,11 @@ export enum TypeEnum {
   DRAFT = "draft",
 }
 
+export enum TypeFilter {
+  ONGOING = "ongoing",
+  COMPLETED = "completed",
+}
+
 export type Item = {
   id: number;
   name: string;

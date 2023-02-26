@@ -2,11 +2,12 @@ import { AuthProvider } from "@/packages/common/hooks/useAuth";
 import AdminLayout from "@/packages/layout/AdminLayout";
 import { ListItem } from "@/packages/ListItems";
 import { useCallback, useEffect, useState } from "react";
-import { Item } from "@/packages/common/types/item";
+import { Item, TypeFilter } from "@/packages/common/types/item";
 import { getListItemApi, publishItemApi } from "@/packages/rest/private/items";
 import { useControlModal } from "@/packages/common/hooks/useModal";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
+import { Filter } from "@/packages/Filter";
 
 export default function Home() {
   const [listItem, setListItem] = useState<Item[]>([]);
@@ -24,8 +25,8 @@ export default function Home() {
     setIsSubmitting(false);
   };
 
-  const getListItem = async () => {
-    const res = await getListItemApi();
+  const getListItem = async (type?: TypeFilter) => {
+    const res = await getListItemApi(type);
     setListItem(res);
   };
 
@@ -47,11 +48,14 @@ export default function Home() {
   return (
     <AuthProvider>
       <AdminLayout>
-        <ListItem
-          data={listItem}
-          onClickBid={handleBid}
-          onClickPublish={handlePublish}
-        />
+        <div className="container m-auto">
+          <Filter onFilter={getListItem}></Filter>
+          <ListItem
+            data={listItem}
+            onClickBid={handleBid}
+            onClickPublish={handlePublish}
+          />
+        </div>
         <Modal isOpen={isOpen}>
           <h2 className="text-lg font-medium mb-6">Bid {itemSelected?.name}</h2>
           <form onSubmit={handleSubmit(onSubmit)}>

@@ -42,54 +42,52 @@ export const ListItem = ({ data, onClickBid, onClickPublish }: Props) => {
   };
 
   return (
-    <div className="container m-auto">
-      <table className="table-auto w-full">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="px-4 py-2 text-left">Name</th>
-            <th className="px-4 py-2 text-left">Current Price</th>
-            <th className="px-4 py-2 text-left">Duration</th>
-            <th className="px-4 py-2 text-left">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => {
-            return (
-              <tr className="border-b" key={index}>
-                <td className="px-4 py-2">{item.name}</td>
-                <td className="px-4 py-2">{item.currentPrice}</td>
-                <td className="px-4 py-2">
-                  {item.type === TypeEnum.DRAFT ? (
-                    <button
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                      onClick={() => {
-                        handlePublish(item);
-                      }}
-                    >
-                      Publish
-                    </button>
-                  ) : (
-                    <Countdown
-                      date={Date.now() + item.duration * 1000}
-                      renderer={renderer}
-                    />
-                  )}
-                </td>
-                <td className="px-4 py-2">
+    <table className="table-auto w-full">
+      <thead>
+        <tr className="bg-gray-200">
+          <th className="px-4 py-2 text-left">Name</th>
+          <th className="px-4 py-2 text-left">Current Price</th>
+          <th className="px-4 py-2 text-left">Duration</th>
+          <th className="px-4 py-2 text-left">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((item, index) => {
+          return (
+            <tr className="border-b" key={index}>
+              <td className="px-4 py-2">{item.name}</td>
+              <td className="px-4 py-2">{item.currentPrice}</td>
+              <td className="px-4 py-2">
+                {item.type === TypeEnum.DRAFT ? (
                   <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     onClick={() => {
-                      handleBid(item);
+                      handlePublish(item);
                     }}
                   >
-                    Bid
+                    Publish
                   </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+                ) : (
+                  <Countdown
+                    date={Date.now() + item.duration * 1000}
+                    renderer={renderer}
+                  />
+                )}
+              </td>
+              <td className="px-4 py-2">
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
+                  onClick={() => {
+                    handleBid(item);
+                  }}
+                >
+                  Bid
+                </button>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 };
