@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import Countdown from "react-countdown";
-import { Item } from "../common/types/item";
+import { Item, TypeEnum } from "../common/types/item";
 
 type Props = {
   data: Item[];
+  onClickBid: (item: Item) => void;
+  onClickPublish: (item: Item) => void;
 };
 
 const renderer = ({
@@ -30,7 +32,15 @@ const renderer = ({
   }
 };
 
-export const ListItem = ({ data }: Props) => {
+export const ListItem = ({ data, onClickBid, onClickPublish }: Props) => {
+  const handleBid = (item: Item) => {
+    onClickBid(item);
+  };
+
+  const handlePublish = (item: Item) => {
+    onClickPublish(item);
+  };
+
   return (
     <div className="container m-auto">
       <table className="table-auto w-full">
@@ -39,7 +49,7 @@ export const ListItem = ({ data }: Props) => {
             <th className="px-4 py-2 text-left">Name</th>
             <th className="px-4 py-2 text-left">Current Price</th>
             <th className="px-4 py-2 text-left">Duration</th>
-            <th className="px-4 py-2 text-left">Bid</th>
+            <th className="px-4 py-2 text-left">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -49,13 +59,29 @@ export const ListItem = ({ data }: Props) => {
                 <td className="px-4 py-2">{item.name}</td>
                 <td className="px-4 py-2">{item.currentPrice}</td>
                 <td className="px-4 py-2">
-                  <Countdown
-                    date={Date.now() + item.duration * 1000}
-                    renderer={renderer}
-                  />
+                  {item.type === TypeEnum.DRAFT ? (
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => {
+                        handlePublish(item);
+                      }}
+                    >
+                      Publish
+                    </button>
+                  ) : (
+                    <Countdown
+                      date={Date.now() + item.duration * 1000}
+                      renderer={renderer}
+                    />
+                  )}
                 </td>
                 <td className="px-4 py-2">
-                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
+                    onClick={() => {
+                      handleBid(item);
+                    }}
+                  >
                     Bid
                   </button>
                 </td>

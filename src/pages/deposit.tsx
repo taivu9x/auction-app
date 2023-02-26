@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import router from "next/router";
 import { depositApi } from "@/packages/rest/private/users";
 
-export default function Home() {
+export default function DepositPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
@@ -44,6 +44,7 @@ export default function Home() {
                 } w-full`}
                 {...register("amount", {
                   required: true,
+                  min: 0,
                 })}
               />
               {errors.amount && (

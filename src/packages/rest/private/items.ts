@@ -15,7 +15,7 @@ export const getListItemApi = async (): Promise<any> => {
     });
     return res.data;
   } catch (e) {
-    console.log("createItemApi error: ", e);
+    console.log("getListItemApi error: ", e);
     return null;
   }
 };
@@ -30,6 +30,20 @@ export const createItemApi = async (data: Item): Promise<any> => {
     return res.data;
   } catch (e) {
     console.log("createItemApi error: ", e);
+    return null;
+  }
+};
+
+export const publishItemApi = async (idItem: number): Promise<any> => {
+  try {
+    const res = await axios.patch(`${API_URI}/items/${idItem}/publish`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    console.log("publishItemApi error: ", e);
     return null;
   }
 };

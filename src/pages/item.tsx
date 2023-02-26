@@ -12,7 +12,13 @@ export default function PageItem() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      name: "",
+      currentPrice: 1,
+      duration: 10,
+    },
+  });
 
   const onSubmit = async (data: any) => {
     await createItemApi(data);
@@ -60,6 +66,7 @@ export default function PageItem() {
                 } w-full`}
                 {...register("currentPrice", {
                   required: true,
+                  min: 1,
                 })}
               />
               {errors.currentPrice && (
@@ -80,6 +87,7 @@ export default function PageItem() {
                 } w-full`}
                 {...register("duration", {
                   required: true,
+                  min: 10,
                 })}
               />
               {errors.duration && (
