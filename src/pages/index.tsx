@@ -3,7 +3,11 @@ import AdminLayout from "@/packages/layout/AdminLayout";
 import { ListItem } from "@/packages/ListItems";
 import { useCallback, useEffect, useState } from "react";
 import { Item, TypeFilter } from "@/packages/common/types/item";
-import { getListItemApi, publishItemApi } from "@/packages/rest/private/items";
+import {
+  bidItemApi,
+  getListItemApi,
+  publishItemApi,
+} from "@/packages/rest/private/items";
 import { useControlModal } from "@/packages/common/hooks/useModal";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
@@ -22,7 +26,18 @@ export default function Home() {
 
   const onSubmit = async (data: any) => {
     setIsSubmitting(true);
-    setIsSubmitting(false);
+    if (!itemSelected) {
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      await bidItemApi(itemSelected?.id, data);
+      // closeModal();
+      setIsSubmitting(false);
+    } catch (error) {
+      console.log("bidItemApi", error);
+    }
   };
 
   const getListItem = async (type?: TypeFilter) => {

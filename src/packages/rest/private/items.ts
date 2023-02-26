@@ -54,3 +54,20 @@ export const publishItemApi = async (idItem: number): Promise<any> => {
     return null;
   }
 };
+
+export const bidItemApi = async (
+  idItem: number,
+  data: { amount: number }
+): Promise<any> => {
+  try {
+    const res = await axios.patch(`${API_URI}/items/${idItem}/bid`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data;
+  } catch (e) {
+    console.log("bidItemApi error: ", e);
+    return null;
+  }
+};
