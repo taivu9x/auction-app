@@ -1,17 +1,13 @@
-import { AuthProvider } from "@/packages/common/hooks/useAuth";
-import AdminLayout from "@/packages/layout/AdminLayout";
-import { ListItem } from "@/packages/ListItems";
-import { useCallback, useEffect, useState } from "react";
-import { Item, TypeFilter } from "@/packages/common/types/item";
-import {
-  bidItemApi,
-  getListItemApi,
-  publishItemApi,
-} from "@/packages/rest/private/items";
-import { useControlModal } from "@/packages/common/hooks/useModal";
-import Modal from "react-modal";
-import { useForm } from "react-hook-form";
-import { Filter } from "@/packages/Filter";
+import { AuthProvider } from '@/packages/common/hooks/useAuth';
+import AdminLayout from '@/packages/layout/AdminLayout';
+import { ListItem } from '@/packages/ListItems';
+import { useCallback, useEffect, useState } from 'react';
+import { Item, TypeFilter } from '@/packages/common/types/item';
+import { bidItemApi, getListItemApi, publishItemApi } from '@/packages/rest/private/items';
+import { useControlModal } from '@/packages/common/hooks/useModal';
+import Modal from 'react-modal';
+import { useForm } from 'react-hook-form';
+import { Filter } from '@/packages/Filter';
 
 export default function Home() {
   const [listItem, setListItem] = useState<Item[]>([]);
@@ -33,10 +29,10 @@ export default function Home() {
 
     try {
       await bidItemApi(itemSelected?.id, data);
-      // closeModal();
+      closeModal();
       setIsSubmitting(false);
     } catch (error) {
-      console.log("bidItemApi", error);
+      console.log('bidItemApi', error);
     }
   };
 
@@ -63,51 +59,41 @@ export default function Home() {
   return (
     <AuthProvider>
       <AdminLayout>
-        <div className="container m-auto">
+        <div className='container m-auto'>
           <Filter onFilter={getListItem}></Filter>
-          <ListItem
-            data={listItem}
-            onClickBid={handleBid}
-            onClickPublish={handlePublish}
-          />
+          <ListItem data={listItem} onClickBid={handleBid} onClickPublish={handlePublish} />
         </div>
         <Modal isOpen={isOpen}>
-          <h2 className="text-lg font-medium mb-6">Bid {itemSelected?.name}</h2>
+          <h2 className='text-lg font-medium mb-6'>Bid {itemSelected?.name}</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-4">
-              <label htmlFor="amount" className="block font-medium mb-2">
+            <div className='mb-4'>
+              <label htmlFor='amount' className='block font-medium mb-2'>
                 Bid Price
               </label>
               <input
-                type="number"
-                id="amount"
-                placeholder="Amount"
+                type='number'
+                id='amount'
+                placeholder='Amount'
                 className={`border border-gray-300 rounded-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:ring-opacity-50 ${
-                  errors.amount ? "border-red-500" : ""
+                  errors.amount ? 'border-red-500' : ''
                 } w-full`}
-                {...register("amount", {
+                {...register('amount', {
                   required: true,
                   min: 0,
                 })}
               />
-              {errors.amount && (
-                <p className="text-red-500 mt-2">Please enter a price</p>
-              )}
+              {errors.amount && <p className='text-red-500 mt-2'>Please enter a price</p>}
             </div>
 
-            <div className="flex justify-end">
-              <button
-                onClick={closeModal}
-                className="mr-5 border px-4 py-2 rounded-lg"
-              >
+            <div className='flex justify-end'>
+              <button onClick={closeModal} className='mr-5 border px-4 py-2 rounded-lg'>
                 Close
               </button>
               <button
-                type="submit"
+                type='submit'
                 disabled={isSubmitting}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-lg"
-              >
-                {isSubmitting ? "Biding..." : "Bid"}
+                className='bg-indigo-600 text-white px-4 py-2 rounded-lg'>
+                {isSubmitting ? 'Biding...' : 'Bid'}
               </button>
             </div>
           </form>

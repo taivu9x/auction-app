@@ -1,5 +1,7 @@
 # MUST IGNORE .env file
 
+# Make sure you prepare API for app
+
 ## Reference
 
 ```bash
