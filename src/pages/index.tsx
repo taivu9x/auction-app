@@ -8,9 +8,13 @@ import { useControlModal } from '@/packages/common/hooks/useModal';
 import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
 import { Filter } from '@/packages/Filter';
+import useSWR from 'swr';
 
 export default function Home() {
-  const [listItem, setListItem] = useState<Item[]>([]);
+  const [filter, setFilter] = useState<TypeFilter>();
+  const { data: listItem } = useSWR<Item[]>(`/items/${filter}`, () => {
+    return getListItemApi(filter);
+  });
   const { isOpen, openModal, closeModal } = useControlModal();
   const [itemSelected, setItemSelected] = useState<Item>();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,6 +23,10 @@ export default function Home() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const onFilter = useCallback((filter?: TypeFilter) => {
+    setFilter(filter);
+  }, []);
 
   const onSubmit = async (data: any) => {
     setIsSubmitting(true);
@@ -36,15 +44,6 @@ export default function Home() {
     }
   };
 
-  const getListItem = async (type?: TypeFilter) => {
-    const res = await getListItemApi(type);
-    setListItem(res);
-  };
-
-  useEffect(() => {
-    getListItem();
-  }, []);
-
   const handleBid = useCallback((item: Item) => {
     setItemSelected(item);
     openModal();
@@ -53,15 +52,14 @@ export default function Home() {
 
   const handlePublish = useCallback(async (item: Item) => {
     await publishItemApi(item.id);
-    getListItem();
   }, []);
 
   return (
     <AuthProvider>
       <AdminLayout>
         <div className='container m-auto'>
-          <Filter onFilter={getListItem}></Filter>
-          <ListItem data={listItem} onClickBid={handleBid} onClickPublish={handlePublish} />
+          <Filter onFilter={onFilter}></Filter>
+          <ListItem data={listItem || []} onClickBid={handleBid} onClickPublish={handlePublish} />
         </div>
         <Modal isOpen={isOpen}>
           <h2 className='text-lg font-medium mb-6'>Bid {itemSelected?.name}</h2>

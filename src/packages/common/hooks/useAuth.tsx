@@ -1,15 +1,8 @@
-import router, { Router } from "next/router";
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { ACCESS_TOKEN_KEY } from "../constants";
-import { Auth } from "../types/auth";
-import { LocalStorageUtils } from "../utils";
+import router, { Router } from 'next/router';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { Auth } from '../types/auth';
+import { LocalStorageUtils } from '../utils';
+import { ACCESS_TOKEN_KEY } from '@/env/constants';
 
 type AuthContextType = {
   user: Auth | null;
@@ -32,7 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = useCallback(() => {
     setUser(null);
     LocalStorageUtils.remove(ACCESS_TOKEN_KEY);
-    router.push("/login");
+    router.push('/login');
   }, []);
 
   const login = useCallback((user: Auth, token: string) => {
@@ -54,13 +47,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!isAuth) {
-      router.push("/login");
+      router.push('/login');
     }
   }, [isAuth]);
 
-  return (
-    <AuthContext.Provider value={providerValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={providerValue}>{children}</AuthContext.Provider>;
 };
