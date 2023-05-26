@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { Filter } from '@/packages/Filter';
 import useSWR from 'swr';
 import { useToast } from '@/common/hooks/useToast';
+import { Form } from '@/common/headless/Form';
 
 export default function Home() {
   const { toastError } = useToast();
@@ -20,11 +21,11 @@ export default function Home() {
   const { isOpen, openModal, closeModal } = useControlModal();
   const [itemSelected, setItemSelected] = useState<Item>();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const methods = useForm({
+    defaultValues: {
+      amount: 0,
+    },
+  });
 
   const onFilter = useCallback((filter?: TypeFilter) => {
     setFilter(filter);
@@ -66,26 +67,24 @@ export default function Home() {
         </div>
         <Modal isOpen={isOpen}>
           <h2 className='text-lg font-medium mb-6'>Bid {itemSelected?.name}</h2>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className='mb-4'>
-              <label htmlFor='amount' className='block font-medium mb-2'>
-                Bid Price
-              </label>
-              <input
-                type='number'
-                id='amount'
-                placeholder='Amount'
-                className={`border border-gray-300 rounded-sm shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:ring-opacity-50 ${
-                  errors.amount ? 'border-red-500' : ''
-                } w-full`}
-                {...register('amount', {
-                  required: true,
-                  min: 0,
-                })}
-              />
-              {errors.amount && <p className='text-red-500 mt-2'>Please enter a price</p>}
-            </div>
-
+          <Form methods={methods} onSubmit={onSubmit}>
+            <Form.Input
+              className='mb-6'
+              label='Bid Price'
+              name='amount'
+              type='number'
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Please enter your bid price',
+                },
+                min: {
+                  value: itemSelected?.currentPrice || 0,
+                  message: `Please enter a price greater than ${itemSelected?.currentPrice || 0}`,
+                },
+              }}
+            />
+            <Form.ErrorMessage name='amount' />
             <div className='flex justify-end'>
               <button onClick={closeModal} className='mr-5 border px-4 py-2 rounded-lg'>
                 Close
@@ -97,7 +96,7 @@ export default function Home() {
                 {isSubmitting ? 'Biding...' : 'Bid'}
               </button>
             </div>
-          </form>
+          </Form>
         </Modal>
       </AdminLayout>
     </AuthProvider>

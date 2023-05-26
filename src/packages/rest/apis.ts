@@ -28,11 +28,11 @@ axiosRetry(myAxios, {
 
 myAxios.interceptors.response.use(
   function (response) {
-    return response.data.data;
+    return response.data;
   },
   function (error: AxiosError) {
     const path = location.pathname;
-    if (error?.response?.status === 403 && !DomUtils.isServer() && !PUBLIC_URLS.includes(path)) {
+    if (error?.response?.status === 401 && !DomUtils.isServer() && !PUBLIC_URLS.includes(path)) {
       CookiesUtils.remove(ACCESS_TOKEN_KEY);
       location.href = '/login';
     }

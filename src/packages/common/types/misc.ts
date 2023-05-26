@@ -1,3 +1,5 @@
+export type Fn = (...args: any[]) => any;
+
 export type ClassName = {
   className?: string;
   testId?: string;
