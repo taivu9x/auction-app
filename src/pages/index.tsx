@@ -9,8 +9,10 @@ import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
 import { Filter } from '@/packages/Filter';
 import useSWR from 'swr';
+import { useToast } from '@/common/hooks/useToast';
 
 export default function Home() {
+  const { toastError } = useToast();
   const [filter, setFilter] = useState<TypeFilter>();
   const { data: listItem } = useSWR<Item[]>(`/items/${filter}`, () => {
     return getListItemApi(filter);
@@ -38,9 +40,10 @@ export default function Home() {
     try {
       await bidItemApi(itemSelected?.id, data);
       closeModal();
+    } catch (error: any) {
+      toastError(error.message);
+    } finally {
       setIsSubmitting(false);
-    } catch (error) {
-      console.log('bidItemApi', error);
     }
   };
 
