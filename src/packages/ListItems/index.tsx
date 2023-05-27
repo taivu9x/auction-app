@@ -52,36 +52,44 @@ export const ListItem = ({ data, onClickBid, onClickPublish }: Props) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((item, index) => {
-          return (
-            <tr className='border-b' key={index}>
-              <td className='px-4 py-2'>{item.name}</td>
-              <td className='px-4 py-2'>{item.currentPrice}</td>
-              <td className='px-4 py-2'>
-                {item.type === TypeEnum.DRAFT ? (
+        {data.length ? (
+          data.map((item, index) => {
+            return (
+              <tr className='border-b' key={index}>
+                <td className='px-4 py-2'>{item.name}</td>
+                <td className='px-4 py-2'>{item.currentPrice}</td>
+                <td className='px-4 py-2'>
+                  {item.type === TypeEnum.DRAFT ? (
+                    <button
+                      className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                      onClick={() => {
+                        handlePublish(item);
+                      }}>
+                      Publish
+                    </button>
+                  ) : (
+                    <Countdown date={Date.now() + item.duration * 1000} renderer={renderer} />
+                  )}
+                </td>
+                <td className='px-4 py-2'>
                   <button
-                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                    className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4'
                     onClick={() => {
-                      handlePublish(item);
+                      handleBid(item);
                     }}>
-                    Publish
+                    Bid
                   </button>
-                ) : (
-                  <Countdown date={Date.now() + item.duration * 1000} renderer={renderer} />
-                )}
-              </td>
-              <td className='px-4 py-2'>
-                <button
-                  className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4'
-                  onClick={() => {
-                    handleBid(item);
-                  }}>
-                  Bid
-                </button>
-              </td>
-            </tr>
-          );
-        })}
+                </td>
+              </tr>
+            );
+          })
+        ) : (
+          <tr>
+            <td colSpan={4} className='text-center'>
+              No data
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   );
